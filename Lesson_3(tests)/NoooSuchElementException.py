@@ -24,3 +24,4 @@ def test_exception2():
             pytest.fail("Не должно быть кнопки Отправить")
     finally: 
         browser.quit()
+        
