@@ -7,6 +7,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from ps import psw
+from ps import lg
 
 
 
@@ -27,9 +29,9 @@ def test_guest_should_see_login_link(browser):
     element = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR,'[href="/lesson/236895/step/1?auth=login"]')))
     browser.execute_script("arguments[0].scrollIntoView();", element)
     element.click()
-    browser.find_element(By.CSS_SELECTOR, '#id_login_email').send_keys('c----------------u')
+    browser.find_element(By.CSS_SELECTOR, '#id_login_email').send_keys(lg())
     time.sleep(1)
-    browser.find_element(By.CSS_SELECTOR, '#id_login_password').send_keys('d-------------g')
+    browser.find_element(By.CSS_SELECTOR, '#id_login_password').send_keys(psw())
     time.sleep(1)
     browser.find_element(By.CSS_SELECTOR, '[type = "submit"]').click()
     time.sleep(1)
