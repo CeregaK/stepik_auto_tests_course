@@ -1,12 +1,15 @@
 import pytest
 import time
 import math
-from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from ps import psw
+from ps import lg
+
 
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
@@ -18,9 +21,9 @@ browser.get(link)
 element = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR,'[href="/lesson/236895/step/1?auth=login"]')))
 browser.execute_script("arguments[0].scrollIntoView();", element)
 element.click()
-browser.find_element(By.CSS_SELECTOR, '#id_login_email').send_keys('cerega.kv@yandex.ru')
+browser.find_element(By.CSS_SELECTOR, '#id_login_email').send_keys(lg())
 time.sleep(1)
-browser.find_element(By.CSS_SELECTOR, '#id_login_password').send_keys('dobro1989tirmag')
+browser.find_element(By.CSS_SELECTOR, '#id_login_password').send_keys(psw())
 time.sleep(1)
 browser.find_element(By.CSS_SELECTOR, '[type = "submit"]').click()
 time.sleep(1)

@@ -12,66 +12,91 @@ from ps import lg
 
 
 
-@pytest.fixture(scope="function")
-def browser():
-    print("\nstart browser for test..")
-    browser = webdriver.Chrome()
-    yield browser
-    print("\nquit browser..")
-    time.sleep(5)
-    browser.quit()
+'''link = ['https://stepik.org/lesson/236895/step/1',
+'https://stepik.org/lesson/236896/step/1',
+'https://stepik.org/lesson/236897/step/1',
+'https://stepik.org/lesson/236898/step/1',
+'https://stepik.org/lesson/236899/step/1',
+'https://stepik.org/lesson/236903/step/1',
+'https://stepik.org/lesson/236904/step/1',
+'https://stepik.org/lesson/236905/step/1']'''
+#def step():
+#'lesson/236896/step/1', 'lesson/236897/step/1', 'lesson/236898/step/1', 'lesson/236899/step/1', 'lesson/236903/step/1', 'lesson/236904/step/1', 'lesson/236905/step/1']   
+#@pytest.mark.parametrize('step',['236895', '236896', '236897', '236898', '236899','236903','236904', '236905'])
 
-#@pytest.mark.parametrize('language', ["ru", "en-gb"])
-def test_guest_should_see_login_link(browser):
-    link = "https://stepik.org/lesson/236895/step/1"
-    browser.get(link)
 
-    element = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR,'[href="/lesson/236895/step/1?auth=login"]')))
-    browser.execute_script("arguments[0].scrollIntoView();", element)
-    element.click()
-    browser.find_element(By.CSS_SELECTOR, '#id_login_email').send_keys(lg())
-    time.sleep(1)
-    browser.find_element(By.CSS_SELECTOR, '#id_login_password').send_keys(psw())
-    time.sleep(1)
-    browser.find_element(By.CSS_SELECTOR, '[type = "submit"]').click()
-    time.sleep(1)
-    popup_close = WebDriverWait(browser, 20).until(EC.invisibility_of_element_located((By.CSS_SELECTOR,'[type = "submit"]')))
-    assert popup_close, "Поп-ап с логином не зкрылся"
-    print('Вход прошел успешно.')
-    answer = math.log(int(time.time()))
-    print('---------------------')
-    print(answer)
-    print('---------------------')
+@pytest.mark.parametrize('link', ['lesson/236895/step/1', 'lesson/236896/step/1', 'lesson/236897/step/1', 'lesson/236898/step/1', 'lesson/236899/step/1', 'lesson/236903/step/1', 'lesson/236904/step/1', 'lesson/236905/step/1'])
+#@pytest.mark.parametrize('link', ['lesson/236895/step/1', 'lesson/236896/step/1'])
+def test_login_link(browser, link):
+     new_link = f'https://stepik.org/{link}'
+     auth_link = f"[href='/{link}?auth=login']"
+     browser.get(new_link)
+     element = WebDriverWait(browser, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, auth_link))) 
+    
+     if element:
+         browser.execute_script("arguments[0].scrollIntoView();", element[0])
+         element[0].click()
+         browser.find_element(By.CSS_SELECTOR, '#id_login_email').send_keys(lg())
+         time.sleep(1)
+         browser.find_element(By.CSS_SELECTOR, '#id_login_password').send_keys(psw())
+         time.sleep(1)
+         browser.find_element(By.CSS_SELECTOR, '[type = "submit"]').click()
+         time.sleep(1)
+         popup_close = WebDriverWait(browser, 10).until(EC.invisibility_of_element_located((By.CSS_SELECTOR,'[type = "submit"]')))
+         assert popup_close, "Поп-ап с логином не зкрылся"
+         print('Вход прошел успешно.')
+     else:
+         pass        
+        
+     #answer = math.log(int(time.time()))
+     #print('---------------------')
+     #print(answer)
+     #print('---------------------')
     
     #---------------------------------------------------
-    """try:
-        browser.find_element_by_css_selector("#ctl00_PlaceHolderMain_ReportViewer1_HtmlOutputReportResults2_updateFilters_TitleAnchor").click()
-    except NoSuchElementException:
-        # do stuff"""
+
     
-    time.sleep(5)
-    btns = browser.find_elements(By.CSS_SELECTOR,'.again-btn.white')
-    if btns:
-        btns[0].click()
-    else:
-        pass
+     #time.sleep(3)
+    
+     btns = browser.find_elements(By.CSS_SELECTOR,'.again-btn.white')
+     if btns:
+         btns[0].click()
+     else:
+         pass
    
     
-    time.sleep(1)
-    submit = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR,'textarea.string-quiz__textarea')))
-    submit.clear()
-    time.sleep(1)
-    submit.send_keys(answer)
-    time.sleep(1)
-    WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR,'.attempt__actions .submit-submission'))).click()
-    time.sleep(5)
-    #----------------____-------------------
+     time.sleep(1)
+     submit = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR,'textarea.string-quiz__textarea')))
+     browser.execute_script("arguments[0].scrollIntoView();", submit)
+     submit.clear()
+     time.sleep(1)
+     answer = math.log(int(time.time()))
+     
+     submit.send_keys(answer)
+     
+     time.sleep(1)
+     attempl = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR,'.attempt__actions .submit-submission')))
+     browser.execute_script("arguments[0].scrollIntoView();", attempl)
+     attempl.click()
+     time.sleep(5)
+     #----------------____-------------------
     
-    content = WebDriverWait(browser, 20).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, 'p.smart-hints__hint'), 'Correct!'))
-    if content:
-        element = browser.find_element(By.CSS_SELECTOR, 'p.smart-hints__hint').text
-        print(f'-------------\n Текст элемента - {element}\n--------------')
-  
+     #element = browser.find_element(By.CSS_SELECTOR, 'p.smart-hints__hint').text
+     #print(f'-------------\n Текст элемента - {element}\n--------------')
+    
+     
+     
+     element = WebDriverWait(browser, 10).until(EC.visibility_of(browser.find_element(By.CSS_SELECTOR, 'p.smart-hints__hint')))
+     #content = WebDriverWait(browser, 20).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, 'p.smart-hints__hint')))
+     time.sleep(5)
+     #element = browser.find_element(By.CSS_SELECTOR, 'p.smart-hints__hint').text
+     element_text = element.text
+     assert element_text == 'Correct!', f'Текст елемента = \033[35m{element.text}'
+     print(f'==============\n Текст элемента - \033[35m{element_text}\n--------------')
+    
+
+   
+
     
     
     
