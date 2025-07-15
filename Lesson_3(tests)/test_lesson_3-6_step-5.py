@@ -11,9 +11,21 @@ from ps import psw  #Подключаем файл с паролем и логи
 from ps import lg
 
 # Файл "conftest.py" с функцией "browser" находиться в папке с проектом.
-@pytest.mark.parametrize("link", ["https://stepik.org/lesson/236895/step/1","https://stepik.org/lesson/236896/step/1","https://stepik.org/lesson/236897/step/1","https://stepik.org/lesson/236898/step/1","https://stepik.org/lesson/236899/step/1","https://stepik.org/lesson/236903/step/1","https://stepik.org/lesson/236904/step/1","https://stepik.org/lesson/236905/step/1"])
+links = [
+"https://stepik.org/lesson/236895/step/1",
+"https://stepik.org/lesson/236896/step/1",
+"https://stepik.org/lesson/236897/step/1",
+"https://stepik.org/lesson/236898/step/1",
+"https://stepik.org/lesson/236899/step/1",
+"https://stepik.org/lesson/236903/step/1",
+"https://stepik.org/lesson/236904/step/1",
+"https://stepik.org/lesson/236905/step/1"
+]
+   
+
+@pytest.mark.parametrize("link", links)
 def test_login_link(browser, link):
-     browser.implicitly_wait(3)
+     browser.implicitly_wait(5)
      browser.get(link)
      # Проверяем есть ли кнопка "Войти",если есть жмем и входим.
      element = WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '#main-navbar .navbar__auth_login'))) 
@@ -35,16 +47,23 @@ def test_login_link(browser, link):
      btns = browser.find_elements(By.CSS_SELECTOR, '.again-btn')
      if len(btns) > 0:
          btns[0].click()
+         time.sleep(2)
+         btns_modal = browser.find_elements(By.CSS_SELECTOR, '.modal-popup__footer.ember-view> button')
+         if len(btns_modal) > 0:
+             btns_modal[0].click()
+             print("=============\nНажали ОК на модальном окне: СБРОС\n================")
      else:
-         pass         
+         pass 
+         
      time.sleep(2)
      answer = math.log(int(time.time()))
      WebDriverWait(browser, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR,'.textarea'))).send_keys(str(answer))
      WebDriverWait(browser, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR,'.submit-submission'))).click()
      time.sleep(2)
-     element = WebDriverWait(browser, 15).until(EC.visibility_of(browser.find_element(By.CSS_SELECTOR, 'p.smart-hints__hint')))
+     element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'p.smart-hints__hint')))
+     time.sleep(2)
      element_text = element.text
      time.sleep(2)
-     assert element_text == 'Correct!', f'Текст елемента - \033[35m{element.text}' #Проверяем что текст в фидбеке = "Correct!". Если нет то выводим текст.
+     assert element_text == 'Correct!', f'Ошибка:{element.text}' #Проверяем что текст в фидбеке = "Correct!". Если нет то выводим текст.
 
 
