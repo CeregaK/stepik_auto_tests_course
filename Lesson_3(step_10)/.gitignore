@@ -1,0 +1,6 @@
+*.log
+__pycache__/
+.pytest_cache/
+test/
+test_project/
+test_project
